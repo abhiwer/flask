@@ -1,0 +1,77 @@
+<html>
+
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+</head>
+
+<body>
+
+  <div class='upload_image'>
+    <form method="POST" action="" enctype="multipart/form-data">
+      <p><input type="file" name="file"></p>
+      <p><input type="submit" value="Submit"></p>
+    </form>
+
+    {%if img %}
+    <img src="{{ img }}" alt="User Image">
+    {% endif %}
+  </div>
+
+  <button type='button' id='download_blob'>Get Images</button>
+  <div id='wordResult1'></div>
+
+  <button type='button' id='run_model'>Process</button>
+  <div id='wordResult2'></div>
+
+  <button type='button' id='display_result'>Display</button>
+  <div id='wordResult3'></div>
+
+  <div>
+    <p>
+      <a href="{{ url_for('.download_file') }}">Download</a>
+    </p>
+  </div>
+
+</body>
+<script>
+  $(document).ready(function () {
+    // Download images from blob storage
+    $('#download_blob').on('click', function (e) {
+      e.preventDefault()
+      $.getJSON('/download_blob',
+        function (response) {
+
+          $("#wordResult1").html(response.html);
+
+        });
+      return false;
+    });
+    // Process Images from Download folder and save it to predicted folder.
+    $('#run_model').on('click', function (e) {
+      e.preventDefault()
+      $.getJSON('/run_model',
+        function (response) {
+          $("#wordResult2").html(response.html);
+        });
+      return false;
+    });
+    // Display Images from predicted folder.
+    $('#display_result').on('click', function (e) {
+      e.preventDefault()
+      $.getJSON('/predicted',
+        function (response) {
+          resultObj = eval(response);
+          var HTMLbuilder = "";
+          for (var i = 0; i < resultObj.length; i++) {
+            var imgHtml = "<img src='" + resultObj[i].url + "'>";
+            HTMLbuilder = HTMLbuilder + imgHtml;
+          }
+          $("#wordResult3").html(HTMLbuilder);
+
+        });
+      return false;
+    });
+  });
+</script>
+
+</html>

@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block title %}
+Home
+{% endblock %}
+{% block content %}
+{%if images %}
+<div style="display: flex;
+      flex-wrap: wrap;
+      border: 1px solid lightblue;">
+  {% for image in images %}
+  <img src="{{url_for('static', filename=image)}}" style="flex: 0 1 200px;
+    height: 100px;
+    margin: 5px;">
+  {% endfor %}
+
+</div>
+{% endif %}
+
+<br>
+
+{% endblock %}

@@ -1,0 +1,8 @@
+Flask
+Flask_restful
+matplotlib
+Pillow
+azure-storage-blob
+tensorflow
+numpy
+matplotlib

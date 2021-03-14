@@ -1,0 +1,227 @@
+<html>
+
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+  <!--FOR NEW PAGE-->
+  <title>Robotic vision images</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <link rel="stylesheet" href="../static/assets/css/main.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <noscript>
+    <link rel="stylesheet" href="../static/assets/css/noscript.css" /></noscript>
+
+</head>
+
+<body class="homepage is-preload">
+
+
+
+
+
+  <div id="page-wrapper">
+
+
+
+
+
+    <!-- Header -->
+    <div id="header">
+      <!-- Inner -->
+
+
+
+
+
+
+
+      <div class="inner">
+        <header>
+          <h1><a href="index.html" id="logo">Robot live stream and anomaly detection</a></h1>
+          <hr />
+
+
+          <p>Watch the live stream of the robot and upload pictures to display results</p>
+        </header>
+        <footer>
+          <button
+
+                    style="background-color: rgb(84, 79, 112)"
+          onclick="location.href='../'">
+            <i class="fa fa-home"
+            style="font-size:32;color:rgb(226, 71, 180)">
+          </i>
+           </button>
+
+          <br>
+          <br>
+          <a href="#banner" class="button circled scrolly">Stream </a>
+          <br>
+            <form method="POST" action="" enctype="multipart/form-data">
+
+
+              <input type="file" name="file" id="upload" hidden/>
+              <label
+
+              style="  display: inline-block;
+                background-color: rgb(84, 79, 112);
+                color: white;
+                padding: 0.5rem;
+                font-family: sans-serif;
+                border-radius: 0.3rem;
+                cursor: pointer;
+                margin-top: 1rem;"
+              for="upload">Choose file</label>
+
+                <br>
+              <button
+              class="button circled"
+              type="submit">
+              Submit
+              </button>
+
+
+              <button
+              class="button circled"
+              type='button' id='download_blob'>Display</button>
+
+              <button
+              class="button circled"
+              type='button' id='download_blob'>Get Images</button>
+
+              <button
+              class="button circled"
+              type='button' id='run_model'>Process</button>
+
+              <button
+              class="button circled"
+              type='button' id='display_result'>Display</button>
+            </form>
+
+
+
+
+          </footer>
+      </div>
+
+
+
+    </div>
+
+    <!-- Banner -->
+    <section id="banner">
+      <header>
+        <h2> Processed images of the <strong>Robot</strong>.</h2>
+        <p>
+          Following results are Processed by custom vision model using open-cv to detect
+          objects inside a picture.
+
+        </p>
+      </header>
+    </section>
+
+    <!-- Carousel -->
+    <section class="carousel">
+      <div class="reel">
+
+        <div id="imagefun">
+
+
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <div id='wordResult3'></div>
+
+
+  </div>
+
+
+  <script src="../static/assets/js/jquery.min.js"></script>
+  <script src="../static/assets/js/jquery.dropotron.min.js"></script>
+  <script src="../static/assets/js/jquery.scrolly.min.js"></script>
+  <script src="../static/assets/js/jquery.scrollex.min.js"></script>
+  <script src="../static/assets/js/browser.min.js"></script>
+  <script src="../static/assets/js/breakpoints.min.js"></script>
+  <script src="../static/assets/js/util.js"></script>
+  <script src="../static/assets/js/main.js"></script>
+
+
+
+</body>
+<script>
+
+
+   $(document).ready(function () {
+
+    $('#download_blob').on('click', function (e) {
+      fetch(`static/predicted`)
+       .then(response => {
+          $.getJSON('static\predicted',
+                  function (response) {
+
+                    resultObj = eval(response);
+                    resultObj = resultObj.images
+
+                    var HTMLbuilder = "";
+                    for (const [key, value] of Object.entries(resultObj)) {
+                      var imgHtml = `
+                        <article>
+                          <a href="#" class="image featured">
+                          <img src="${value.url}" alt="" />
+                          </a>
+                          <header>
+                            <h3><a href="#"></a></h3>
+                        </header>
+                        <p></p>
+                        </article>
+                      `;
+
+                      HTMLbuilder = HTMLbuilder + imgHtml;
+                    }
+                    $("#imagefun").html(HTMLbuilder);
+                  });
+       })
+
+
+
+
+    })
+
+
+
+    // Process Images from Download folder and save it to predicted folder.
+    $('#run_model').on('click', function (e) {
+      e.preventDefault()
+      $.getJSON('/run_model',
+        function (response) {
+          $("#wordResult2").html(response.html);
+        });
+      return false;
+    });
+    // Display Images from predicted folder.
+    $('#display_result').on('click', function (e) {
+      e.preventDefault()
+      $.getJSON('/picture',
+        function (response) {
+          resultObj = eval(response);
+          var HTMLbuilder = "";
+          for (var i = 0; i < resultObj.length; i++) {
+            var imgHtml = "<img src='" + resultObj[i].url + "'>";
+            HTMLbuilder = HTMLbuilder + imgHtml;
+          }
+          $("#wordResult3").html(HTMLbuilder);
+
+        });
+      return false;
+    });
+
+
+  });
+</script>
+
+</html>

@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block title %}
+Home
+{% endblock %}
+{% block content %}
+<p>Robotics Vision Web Application.</p>
+{% endblock %}
+
+
+
+{% for name in image_names %}
+ <img src="{{ url_for('static', filename='pferson_folder/' + name) }}" >
+{% endfor %}
